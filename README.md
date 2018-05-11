@@ -2,16 +2,20 @@
 
 Pretty is a simple wrapper tool that prettifies a process's stdout/stderr's JSON output line by line. If output line is not a valid JSON, it will just print the line as is.
 
+Example: (normal JSON logs using logrus, redacted)
+
 ```bash
-# normal JSON logs sample (using logrus), redacted
 $ kubectl logs -f svc-699544fd4d-zzlcf
 ...
 {"action":"describe-deployments","http_method":"GET","level":"info","service":"stack","time":"..."...}
 {"context":"metrics-middleware","http_method": "GET","level":"info","service":"stack","time":"..."...}
 {"action": "encode-response","http_method": "GET","level": "info","msg": "marshal response as is"...}
 ...
+```
 
-# wrapped by pretty (redacted)
+Example: (wrapped by pretty, redacted)
+
+```bash
 $ pretty -- kubectl logs -f svc-699544fd4d-zzlcf
 ...
 2018/05/11 14:58:45 [stdout] {
