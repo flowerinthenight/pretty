@@ -1,6 +1,6 @@
 ## Overview
 
-Pretty is a simple wrapper tool that prettifies a process's stdout/stderr's JSON output line by line. If output line is not a valid JSON, it will just print the line as is.
+`pretty` is a simple wrapper tool that prettifies a process's stdout/stderr's JSON output line by line. If output line is not a valid JSON, it will just print the line as is.
 
 Example: (normal JSON logs using logrus, redacted)
 
