@@ -6,8 +6,8 @@ Pretty is a simple wrapper tool that prettifies a process's stdout/stderr's JSON
 # normal JSON logs sample (using logrus), redacted
 $ kubectl logs -f svc-699544fd4d-zzlcf
 ...
-{"action":"describe-deployments","http_method":"GET","level":"info","service":"stack","time":"2018-05-11T05:58:45Z"...}
-{"context":"metrics-middleware","http_method": "GET","level":"info","service":"stack","time":"2018-05-11T05:58:45Z"...}
+{"action":"describe-deployments","http_method":"GET","level":"info","service":"stack","time":"..."...}
+{"context":"metrics-middleware","http_method": "GET","level":"info","service":"stack","time":"..."...}
 {"action": "encode-response","http_method": "GET","level": "info","msg": "marshal main response as is"...}
 ...
 
