@@ -1,6 +1,6 @@
 ## Overview
 
-`pretty` is a simple wrapper tool that prettifies a process's stdout/stderr's JSON output line by line. If output line is not a valid JSON, it will just print the line as is.
+`pretty` is a simple wrapper tool that prettifies a process's stdout/stderr's JSON output line by line. If output line is not a valid JSON, it will just print the line as is. It also works even in "follow" mode, such as `tail -f ...` or `kubectl logs -f ...`.
 
 Example: (normal JSON logs using logrus, redacted)
 
