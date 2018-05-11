@@ -64,3 +64,9 @@ $ pretty -- kubectl logs -f svc-699544fd4d-zzlcf
 }
 ...
 ```
+
+## Installation
+
+```bash
+$ go get -u -v github.com/flowerinthenight/pretty
+```
