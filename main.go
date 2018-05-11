@@ -67,8 +67,8 @@ var (
 						break
 					}
 
-					s := outscan.Text()
-					pre, s := prepare(s)
+					b := outscan.Bytes()
+					pre, s := prepare(b)
 					if pre != "" {
 						log.Println(green("[stdout]"), pre, s)
 					} else {
@@ -89,8 +89,8 @@ var (
 						break
 					}
 
-					s := errscan.Text()
-					pre, s := prepare(s)
+					b := errscan.Bytes()
+					pre, s := prepare(b)
 					if pre != "" {
 						log.Println(red("[stderr]"), pre, s)
 					} else {
@@ -105,9 +105,10 @@ var (
 )
 
 // Returns prefix (before the JSON part, if any), and the JSON string.
-func prepare(s string) (string, string) {
+func prepare(b []byte) (string, string) {
 	var prefix string
 
+	s := string(b)
 	i1 := strings.Index(s, "[")
 	i2 := strings.Index(s, "{")
 	if i1 < 0 && i2 < 0 {
