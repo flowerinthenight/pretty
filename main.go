@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/fatih/color"
@@ -19,7 +20,7 @@ var (
 	c *exec.Cmd
 
 	rootCmd = &cobra.Command{
-		Use:   "jlp",
+		Use:   "pretty",
 		Short: "JSON log prettifier wrapper tool",
 		Long:  "JSON log prettifier wrapper tool.",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -66,12 +67,13 @@ var (
 						break
 					}
 
-					stxt := outscan.Text()
-					if stxt[0] == '{' || stxt[0] == '[' {
-						stxt = pretty(stxt)
+					s := outscan.Text()
+					pre, s := prepare(s)
+					if pre != "" {
+						log.Println(green("[stdout]"), pre, s)
+					} else {
+						log.Println(green("[stdout]"), s)
 					}
-
-					log.Println(green("[stdout]"), stxt)
 				}
 			}()
 
@@ -87,12 +89,13 @@ var (
 						break
 					}
 
-					stxt := errscan.Text()
-					if stxt[0] == '{' || stxt[0] == '[' {
-						stxt = pretty(stxt)
+					s := errscan.Text()
+					pre, s := prepare(s)
+					if pre != "" {
+						log.Println(red("[stderr]"), pre, s)
+					} else {
+						log.Println(red("[stderr]"), s)
 					}
-
-					log.Println(red("[stderr]"), stxt)
 				}
 			}()
 
@@ -100,6 +103,38 @@ var (
 		},
 	}
 )
+
+// Returns prefix (before the JSON part, if any), and the JSON string.
+func prepare(s string) (string, string) {
+	var prefix string
+
+	i1 := strings.Index(s, "[")
+	i2 := strings.Index(s, "{")
+	if i1 < 0 && i2 < 0 {
+		return prefix, s
+	}
+
+	if (i1 * i2) == 0 {
+		return prefix, pretty(s)
+	}
+
+	i := i1
+	if (i1 * i2) < 0 {
+		if i2 > i {
+			i = i2
+		}
+	} else {
+		if i2 < i {
+			i = i2
+		}
+	}
+
+	if i > 0 {
+		prefix = s[0 : i-1]
+	}
+
+	return prefix, pretty(s[i:])
+}
 
 func pretty(v interface{}) string {
 	var out bytes.Buffer
@@ -119,7 +154,7 @@ func pretty(v interface{}) string {
 
 	err := json.Indent(&out, b, "", "  ")
 	if err != nil {
-		return err.Error()
+		return v.(string)
 	}
 
 	return out.String()
