@@ -20,24 +20,6 @@ $ pretty -- kubectl logs -f svc-699544fd4d-zzlcf
 ...
 2018/05/11 14:58:45 [stdout] {
   "action": "describe-deployments",
-  "http_method":"GET",
-  "level":"info",
-  "msg": "describe={Type:compute.v1.instance Zone:asia-northeast1-a Name:...}",
-  "request": "92b86ab1-7c8e-4f77-871a-7caf132b421e",
-  "service": "stack",
-  "time": "2018-05-11T05:58:45Z"
-}
-2018/05/11 14:58:45 [stdout] {
-  "action": "describe-deployments",
-  "http_method": "GET",
-  "level": "info",
-  "msg": "describe={Type:compute.v1.instance Zone:asia-northeast1-a Name:...}",
-  "request": "92b86ab1-7c8e-4f77-871a-7caf132b421e",
-  "service": "stack",
-  "time": "2018-05-11T05:58:45Z"
-}
-2018/05/11 14:58:45 [stdout] {
-  "action": "describe-deployments",
   "http_method": "GET",
   "level": "info",
   "msg": "describe={Type:compute.v1.instance Zone:asia-northeast1-a Name:...}",
