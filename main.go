@@ -16,8 +16,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type fnSprintFunc func(a ...interface{}) string // color's SprintFunc's signature
+
 var (
 	c *exec.Cmd
+
+	stern bool
+	green = color.New(color.FgGreen).SprintFunc()
+	red   = color.New(color.FgRed).SprintFunc()
+
+	colors = []color.Attribute{
+		color.FgYellow,
+		color.FgBlue,
+		color.FgMagenta,
+		color.FgCyan,
+		color.FgWhite,
+		color.FgRed,
+		color.FgGreen,
+	}
 
 	rootCmd = &cobra.Command{
 		Use:   "pretty",
@@ -51,58 +67,61 @@ var (
 				log.Fatalln(err)
 			}
 
-			green := color.New(color.FgGreen).SprintFunc()
-			red := color.New(color.FgRed).SprintFunc()
-			_ = red
-
 			go func() {
 				outscan := bufio.NewScanner(outpipe)
-				for {
-					chk := outscan.Scan()
-					if !chk {
-						if outscan.Err() != nil {
-							log.Fatalln(outscan.Err())
-						}
-
-						break
-					}
-
-					b := outscan.Bytes()
-					pre, s := prepare(b)
-					if pre != "" {
-						log.Println(green("[stdout]"), pre, s)
-					} else {
-						log.Println(green("[stdout]"), s)
-					}
-				}
+				print(green("[stdout]"), outscan)
 			}()
 
 			go func() {
 				errscan := bufio.NewScanner(errpipe)
-				for {
-					chk := errscan.Scan()
-					if !chk {
-						if errscan.Err() != nil {
-							log.Fatalln(errscan.Err())
-						}
-
-						break
-					}
-
-					b := errscan.Bytes()
-					pre, s := prepare(b)
-					if pre != "" {
-						log.Println(red("[stderr]"), pre, s)
-					} else {
-						log.Println(red("[stderr]"), s)
-					}
-				}
+				print(red("[stderr]"), errscan)
 			}()
 
 			c.Wait()
 		},
 	}
 )
+
+func print(outpre string, scan *bufio.Scanner) {
+	var ci int
+	var cm map[string]fnSprintFunc
+
+	if stern {
+		cm = make(map[string]fnSprintFunc)
+	}
+
+	for {
+		chk := scan.Scan()
+		if !chk {
+			if scan.Err() != nil {
+				log.Fatalln(scan.Err())
+			}
+		}
+
+		b := scan.Bytes()
+		pre, s := prepare(b)
+		if pre != "" {
+			if stern {
+				fnclr, ok := cm[pre]
+				if ok {
+					pre = fnclr(pre)
+				} else {
+					fn := color.New(colors[ci]).SprintFunc()
+					cm[pre] = fn
+					pre = fn(pre)
+					ci += 1
+					if ci >= len(colors) {
+						ci = 0
+					}
+				}
+			}
+
+			log.Println(outpre, pre, s)
+		} else {
+			log.Println(outpre, s)
+		}
+	}
+}
 
 // Returns prefix (before the JSON part, if any), and the JSON string.
 func prepare(b []byte) (string, string) {
@@ -131,7 +150,7 @@ func prepare(b []byte) (string, string) {
 	}
 
 	if i > 0 {
-		prefix = s[0 : i-1]
+		prefix = s[0:i]
 	}
 
 	return prefix, pretty(s[i:])
@@ -179,5 +198,6 @@ func main() {
 		os.Exit(0)
 	}()
 
+	rootCmd.Flags().BoolVar(&stern, "stern", stern, "prefix color if using stern")
 	rootCmd.Execute()
 }
