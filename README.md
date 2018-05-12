@@ -61,7 +61,7 @@ $ go get -u -v github.com/flowerinthenight/pretty
 
 ## Usage
 
-You can prepend the command that you want to prettify with `pretty --`. The double-dash will ensure that any succeeding flags belong to the wrapped command, not to `pretty`.
+You can prepend the command that you want to prettify with `pretty [flags] --`. The double-dash will ensure that any succeeding flags belong to the wrapped command, not to `pretty`.
 
 ```bash
 $ pretty -- kubectl logs -f svc-699544fd4d-zzlcf
