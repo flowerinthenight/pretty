@@ -5,7 +5,7 @@
 It also works with https://github.com/wercker/stern (which I use a lot), that is, the JSON log has a text prefix (pod name in `stern`'s case). It will print the text prefix first, then append the prettified JSON. To enable color for `stern`, you can try the following sample command:
 
 ```bash
-$ pretty --stern -- stern <some-pod/svc> -s 24h
+$ pretty --stern=true -- stern <some-pod/svc> -s 24h
 ```
 
 Example: (normal JSON logs using logrus, redacted)
