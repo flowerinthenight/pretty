@@ -2,7 +2,7 @@
 
 `pretty` is a simple wrapper tool that prettifies a process's stdout/stderr's JSON output line by line. If output line is not a valid JSON, or does not contain a valid JSON, it will just print the line as is. It also works in "follow" mode, such as `tail -f ...` or `kubectl logs -f ...`.
 
-It also works with https://github.com/wercker/stern (which I use a lot), that is, the JSON log has a text prefix (pod name in `stern`'s case). It will print the text prefix first, then append the prettified JSON. To enable color for `stern`, you can try the following sample command:
+It also works with https://github.com/wercker/stern (which I use a lot), that is, the JSON log has a text prefix (pod name in `stern`'s case). It will print the text prefix first, then append the prettified JSON. To enable color for `stern`, you can try the following command:
 
 ```bash
 $ pretty --stern=true -- stern <some-pod/svc> -s 24h
